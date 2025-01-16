@@ -1,31 +1,29 @@
 # frozen_string_literal: true
 
 require 'openai'
-require 'git'
+require 'open3'
 require_relative 'code_review_ai/version'
 
 module CodeReviewAi
   # ================================================================================
   # This class interacts with the Commit Message AI service to process and generate
-  # meaningful commit messages based on staged changes in the repository.
+  # meaningful commit messages based on changes in the repository.
   # ================================================================================
   class Client
-    def initialize(api_token, repo_path = '.')
+    def initialize(api_token)
       @client = OpenAI::Client.new(
         access_token: api_token,
         log_errors: true
       )
-      @repo = Git.open(repo_path)
     end
 
-    # Generates a code review with comments based on the staged changes.
     def generate_code_review
       prompt = generate_prompt
       response = @client.chat(
         parameters: {
-          model: 'gpt-3.5-turbo',
+          model: 'gpt-4o-mini',
           messages: [
-            { role: 'system', content: 'You are an assistant generating code review comments based on staged changes.' },
+            { role: 'system', content: 'You are an assistant generating code review comments based on repository changes.' },
             { role: 'user', content: prompt }
           ]
         }
@@ -40,35 +38,53 @@ module CodeReviewAi
 
     # Generates the prompt to describe the current changes in the repository.
     def generate_prompt
-      changes = @repo.diff('HEAD').patch
+      changes = fetch_branch_changes
       <<~PROMPT
-        The following are the current staged changes in the repository:
+        I will give you the changes in the repository between the current branch and main.
 
+        Please review these changes and provide code improvement suggestions.
+        Your response should only contain series of suggestions for each file and line number.
+        For each suggestion, you must exactly use following format: # Add validation to ensure `file_path` exists before attempting to read it in `add_comments_to_file`.
+
+        "File: lib/code_review_ai.rb  \nLine: 12  \nSuggestion: [👉SUGGESTION💡]Consider adding error handling for scenarios where the Git repository cannot be opened.\n\nFile: lib/code_review_ai.rb  \nLine: 24  \nSuggestion: [👉SUGGESTION💡]Add a comment to explain the purpose of the `generate_code_review` method.\n\nFile: lib/code_review_ai.rb  \nLine: 33  \nSuggestion: [👉SUGGESTION💡]Add a comment to clarify what the expected format of the prompt is.\n\nFile: lib/code_review_ai.rb  \nLine: 41  \nSuggestion: [👉SUGGESTION💡]Include a comment to describe what `apply_code_review_comments` does."
+
+        Ensure that each suggestion is clearly associated with the relevant file and line of code.
+        Do not return anything but the suggestions. No introduction or conclusion is needed.
+
+        Here are the changes in the repository:
         #{changes}
-
-        Please review these changes and provide code improvement suggestions. Format each suggestion as a comment to be added to the relevant lines in the changed files.
       PROMPT
     end
 
-    # Applies the generated code review comments to the files.
-    def apply_code_review_comments(comments)
-      comment_blocks = comments.scan(/File: (.*?)\n(.*?)\n\n/m)
-      comment_blocks.each do |file_path, comment|
-        add_comments_to_file(file_path, comment)
+    def fetch_branch_changes
+      stdout, stderr, status = Open3.capture3('git diff main...HEAD')
+
+      raise "Error getting git diff: #{stderr}" unless status.success?
+
+      stdout.strip
+    end
+
+    def apply_code_review_comments(code_review_comments)
+      comment_blocks = code_review_comments.scan(/File:\s+(.*?)\s+Line:\s+(\d+)\s+Suggestion:\s+(.*?)\s*(?:\n|$)/m)
+
+      comment_blocks.each do |file_path, line_number, suggestion|
+        add_comments_to_file(file_path, line_number.to_i, suggestion)
       end
     end
 
-    # Adds comments to the specified file.
-    def add_comments_to_file(file_path, comments)
-      lines_with_comments = comments.scan(/Line (\d+): (.*?)(?=\nLine|$)/m)
+    def add_comments_to_file(file_path, line_number, suggestion)
+      # Read the file content
       file_content = File.readlines(file_path)
 
-      lines_with_comments.each do |line_number, comment|
-        line_index = line_number.to_i - 1
-        file_content[line_index] = "#{file_content[line_index].chomp} # #{comment}\n"
+      # Ensure the line number is within the bounds of the file's length
+      if line_number <= file_content.size
+        # Add the comment at the specified line
+        file_content[line_number - 1] = "#{file_content[line_number - 1].chomp} # #{suggestion}\n"
+        # Write the modified content back to the file
+        File.write(file_path, file_content.join)
+      else
+        puts "Warning: Line #{line_number} does not exist in file #{file_path}."
       end
-
-      File.write(file_path, file_content.join)
     end
   end
 end
