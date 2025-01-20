@@ -3,6 +3,7 @@
 require 'openai'
 require 'open3'
 require_relative 'code_review_ai/version'
+require_relative 'code_review_ai/prompt'
 
 module CodeReviewAi
   # ================================================================================
@@ -10,20 +11,24 @@ module CodeReviewAi
   # meaningful commit messages based on changes in the repository.
   # ================================================================================
   class Client
-    def initialize(api_token)
+    def initialize(api_token, ai_model)
       @client = OpenAI::Client.new(
         access_token: api_token,
         log_errors: true
       )
+      @ai_model = ai_model
     end
 
     def generate_code_review
       prompt = generate_prompt
       response = @client.chat(
         parameters: {
-          model: 'gpt-4o-mini',
+          model: @ai_model,
           messages: [
-            { role: 'system', content: 'You are an assistant generating code review comments based on repository changes.' },
+            {
+              role: 'system',
+              content: 'You are an assistant generating code review comments based on repository changes.'
+            },
             { role: 'user', content: prompt }
           ]
         }
@@ -36,24 +41,9 @@ module CodeReviewAi
 
     private
 
-    # Generates the prompt to describe the current changes in the repository.
     def generate_prompt
       changes = fetch_branch_changes
-      <<~PROMPT
-        I will give you the changes in the repository between the current branch and main.
-
-        Please review these changes and provide code improvement suggestions.
-        Your response should only contain series of suggestions for each file and line number.
-        For each suggestion, you must exactly use following format: # Add validation to ensure `file_path` exists before attempting to read it in `add_comments_to_file`.
-
-        "File: lib/code_review_ai.rb  \nLine: 12  \nSuggestion: [👉SUGGESTION💡]Consider adding error handling for scenarios where the Git repository cannot be opened.\n\nFile: lib/code_review_ai.rb  \nLine: 24  \nSuggestion: [👉SUGGESTION💡]Add a comment to explain the purpose of the `generate_code_review` method.\n\nFile: lib/code_review_ai.rb  \nLine: 33  \nSuggestion: [👉SUGGESTION💡]Add a comment to clarify what the expected format of the prompt is.\n\nFile: lib/code_review_ai.rb  \nLine: 41  \nSuggestion: [👉SUGGESTION💡]Include a comment to describe what `apply_code_review_comments` does."
-
-        Ensure that each suggestion is clearly associated with the relevant file and line of code.
-        Do not return anything but the suggestions. No introduction or conclusion is needed.
-
-        Here are the changes in the repository:
-        #{changes}
-      PROMPT
+      format(CodeReviewAi::Prompts::TEMPLATE, changes: changes)
     end
 
     def fetch_branch_changes
@@ -73,7 +63,6 @@ module CodeReviewAi
     end
 
     def add_comments_to_file(file_path, line_number, suggestion)
-      # Read the file content
       file_content = File.readlines(file_path)
 
       # Ensure the line number is within the bounds of the file's length
