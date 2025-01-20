@@ -3,7 +3,7 @@
 require 'openai'
 require 'open3'
 require_relative 'code_review_ai/version'
-require_relative 'code_review_ai/prompt'
+require_relative 'code_review_ai/prompts'
 
 module CodeReviewAi
   # ================================================================================
