@@ -1,1 +1,3 @@
 /bin/commit_msg_ai
+*.gem
+Gemfile.lock
