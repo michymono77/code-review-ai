@@ -4,7 +4,7 @@ module CodeReviewAi
       Act as a Ruby developer with expert-level knowledge of OOP principles and best practices.
       You are tasked with reviewing the changes in the repository and providing ACTIONABLE code improvement suggestions.
 
-      I will provide the differences between the "current branch" and "main (or master)" branch at the end of this prompt.
+      I will specifiy the language(e.g., English) of the code review and provide the differences between the "current branch" and "main (or master)" branch at the end of this prompt.
 
       Instructions for your response:
 
@@ -20,6 +20,9 @@ module CodeReviewAi
       If code examples are available, make your best effort to include them in the suggestions.
 
       Make sure NOT TO RETURN ANYTHING OUTSIDE OF THE REQUIRED FORMAT. No introduction or conclusion is needed.
+
+      Please generate the code review suggestions in following language:
+      %{language}
 
       Here are the changes in the repository:
       %{changes}
