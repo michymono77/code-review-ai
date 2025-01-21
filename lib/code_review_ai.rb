@@ -59,7 +59,7 @@ module CodeReviewAi
 
     def generate_prompt
       changes = fetch_branch_changes
-      format(CodeReviewAi::Prompts::TEMPLATE, changes: changes,language: @language)
+      format(CodeReviewAi::Prompts::TEMPLATE, changes: changes, language: @language)
     end
 
     def fetch_branch_changes
