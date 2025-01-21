@@ -16,7 +16,7 @@ module CodeReviewAi
       @ai_model = ai_model
     end
 
-    def generate_code_review
+    def conduct_code_review
       prompt = generate_prompt
       response = get_ai_response(prompt)
       code_review_comments = process_code_review_response(response)
