@@ -12,10 +12,7 @@ module CodeReviewAi
   # ================================================================================
   class Client
     def initialize(api_token, ai_model)
-      @client = OpenAI::Client.new(
-        access_token: api_token,
-        log_errors: true
-      )
+      @client = create_openai_client(api_token)
       @ai_model = ai_model
     end
 
@@ -40,6 +37,13 @@ module CodeReviewAi
     end
 
     private
+
+    def create_openai_client(api_token)
+      OpenAI::Client.new(
+        access_token: api_token,
+        log_errors: true
+      )
+    end
 
     def generate_prompt
       changes = fetch_branch_changes
