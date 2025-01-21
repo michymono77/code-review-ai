@@ -47,11 +47,20 @@ module CodeReviewAi
     end
 
     def fetch_branch_changes
-      stdout, stderr, status = Open3.capture3('git diff main...HEAD')
+      branch = check_for_default_branch('main') || check_for_default_branch('master')
+
+      raise 'Neither main nor master branch found in the repository' unless branch
+
+      stdout, stderr, status = Open3.capture3("git diff #{branch}...HEAD")
 
       raise "Error getting git diff: #{stderr}" unless status.success?
 
       stdout.strip
+    end
+
+    def check_for_default_branch(branch_name)
+      _, _, status = Open3.capture3("git show-ref refs/heads/#{branch_name}")
+      status.success? ? branch_name : nil
     end
 
     def apply_code_review_comments(code_review_comments)
