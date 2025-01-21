@@ -11,9 +11,10 @@ module CodeReviewAi
   # meaningful commit messages based on changes in the repository.
   # ================================================================================
   class Client
-    def initialize(api_token, ai_model)
+    def initialize(api_token, ai_model, language)
       @client = create_openai_client(api_token)
       @ai_model = ai_model
+      @language = language
     end
 
     def conduct_code_review
@@ -45,7 +46,7 @@ module CodeReviewAi
           messages: [
             {
               role: 'system',
-              content: 'You are a helpful assistant.'
+              content: 'You are an assistant generating code review comments based on repository changes.'
             },
             {
               role: 'user',
@@ -58,7 +59,7 @@ module CodeReviewAi
 
     def generate_prompt
       changes = fetch_branch_changes
-      format(CodeReviewAi::Prompts::TEMPLATE, changes: changes)
+      format(CodeReviewAi::Prompts::TEMPLATE, changes: changes, language: @language)
     end
 
     def fetch_branch_changes
