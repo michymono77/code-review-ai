@@ -16,21 +16,10 @@ module CodeReviewAi
       @ai_model = ai_model
     end
 
-    def generate_code_review
+    def conduct_code_review
       prompt = generate_prompt
-      response = @client.chat(
-        parameters: {
-          model: @ai_model,
-          messages: [
-            {
-              role: 'system',
-              content: 'You are an assistant generating code review comments based on repository changes.'
-            },
-            { role: 'user', content: prompt }
-          ]
-        }
-      )
-      code_review_comments = response.dig('choices', 0, 'message', 'content') || 'Error: Unable to generate code review.'
+      response = get_ai_response(prompt)
+      code_review_comments = process_code_review_response(response)
       apply_code_review_comments(code_review_comments)
     rescue StandardError => e
       "Error communicating with OpenAI API: #{e.message}"
@@ -42,6 +31,28 @@ module CodeReviewAi
       OpenAI::Client.new(
         access_token: api_token,
         log_errors: true
+      )
+    end
+
+    def process_code_review_response(response)
+      response.dig('choices', 0, 'message', 'content') || 'Error: Unable to generate code review.'
+    end
+
+    def get_ai_response(prompt)
+      @client.chat(
+        parameters: {
+          model: @ai_model,
+          messages: [
+            {
+              role: 'system',
+              content: 'You are a helpful assistant.'
+            },
+            {
+              role: 'user',
+              content: prompt
+            }
+          ]
+        }
       )
     end
 
