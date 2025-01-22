@@ -20,10 +20,33 @@ module CodeReviewAi
     def conduct_code_review
       prompt = generate_prompt
       response = get_ai_response(prompt)
-      code_review_comments = process_code_review_response(response)
+      code_review_comments = process_response(response)
       apply_code_review_comments(code_review_comments)
     rescue StandardError => e
       "Error communicating with OpenAI API: #{e.message}"
+    end
+
+    def generate_branch_summary
+        prompt = format(CodeReviewAi::Prompts::BRANCH_SUMMARY_TEMPLATE, changes: fetch_branch_changes, language: @language)
+        response = @client.chat(
+          parameters: {
+            model: @ai_model,
+            messages: [
+              {
+                role: 'system',
+                content: 'You are an assistant summarizing git branch changes clearly and concisely.'
+              },
+              {
+                role: 'user',
+                content: prompt
+              }
+            ]
+          }
+        )
+        summary = process_response(response)
+        puts summary
+    rescue StandardError => e
+      "Error generating branch summary: #{e.message}"
     end
 
     private
@@ -35,7 +58,7 @@ module CodeReviewAi
       )
     end
 
-    def process_code_review_response(response)
+    def process_response(response)
       response.dig('choices', 0, 'message', 'content') || 'Error: Unable to generate code review.'
     end
 
@@ -58,8 +81,7 @@ module CodeReviewAi
     end
 
     def generate_prompt
-      changes = fetch_branch_changes
-      format(CodeReviewAi::Prompts::TEMPLATE, changes: changes, language: @language)
+      format(CodeReviewAi::Prompts::CODE_REVIEW_TEMPLATETEMPLATE, changes: fetch_branch_changes, language: @language)
     end
 
     def fetch_branch_changes

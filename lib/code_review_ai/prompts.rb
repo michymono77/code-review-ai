@@ -1,6 +1,6 @@
 module CodeReviewAi
   module Prompts
-    TEMPLATE = <<~PROMPT
+    CODE_REVIEW_TEMPLATE = <<~PROMPT
       Act as a Ruby developer with expert-level knowledge of OOP principles and best practices.
       You are tasked with reviewing the changes in the repository and providing ACTIONABLE code improvement suggestions.
 
@@ -25,6 +25,21 @@ module CodeReviewAi
       %{language}
 
       Here are the changes in the repository:
+      %{changes}
+    PROMPT
+
+    BRANCH_SUMMARY_TEMPLATE = <<~PROMPT
+      Please provide a concise summary of the branch changes I give you at the endd.
+      The format of the summary should be as follows:
+      1. overview of the changes made in the branch
+      2. In bullet points, list the main changes in in %{language}
+        - Summary of the changes
+        - Impact of the changes
+        - Any potential issues or concerns
+        - Suggestions for improvement
+        - Any other relevant information
+
+      Changes:
       %{changes}
     PROMPT
   end
