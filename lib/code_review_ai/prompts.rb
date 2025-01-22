@@ -29,10 +29,10 @@ module CodeReviewAi
     PROMPT
 
     BRANCH_SUMMARY_TEMPLATE = <<~PROMPT
-      Please provide a concise summary of the branch changes in %{language} I give you at the endd.
+      Please provide a concise summary of the branch changes I give you at the endd.
       The format of the summary should be as follows:
       1. overview of the changes made in the branch
-      2. In bullet points, list the main changes
+      2. In bullet points, list the main changes in in %{language}
         - Summary of the changes
         - Impact of the changes
         - Any potential issues or concerns
