@@ -29,10 +29,10 @@ module CodeReviewAi
     PROMPT
 
     BRANCH_SUMMARY_TEMPLATE = <<~PROMPT
-      Please provide a concise summary of the branch changes I give you at the endd.
+      Acting as a Ruby developer with expert-level knowledge of OOP principles and best practices, you are tasked to provide a summary of the branch changes I give you at the end.
       The format of the summary should be as follows:
-      1. overview of the changes made in the branch
-      2. In bullet points, list the main changes in in %{language}
+      1. Overview of the changes made in the branch in %{language}
+      2. In bullet points, list the main changes in in %{language} for each file. Be SPECIFIC and CONCISE.
         - Summary of the changes
         - Impact of the changes
         - Any potential issues or concerns
