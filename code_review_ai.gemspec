@@ -21,4 +21,13 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'pry', '~> 0.14.0'
   s.add_development_dependency 'rspec', '~> 3.13'
   s.add_development_dependency 'rubocop', '~> 1.6'
+
+  s.post_install_message = <<~MESSAGE
+    After installing the gem, please run the following command to install Node.js dependencies:
+      npm install -g standard-version
+
+    You can then add a changelog by running:
+      npx standard-version --no-tag
+    This refers the version defined in the package.json file.
+  MESSAGE
 end
