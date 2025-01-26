@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.authors     = ['Michiharu Ono']
   s.email       = 'michiharuono77@gmail.com'
   s.files       = Dir.glob('lib/**/*.rb')
-  s.executables = ['code_review_ai']
+  s.executables = ['code-review-ai']
   s.add_dependency 'faraday', '~> 2.1'
   s.add_dependency 'optparse', '~> 0.6'
   s.add_dependency 'ruby-openai', '~> 7.3'
