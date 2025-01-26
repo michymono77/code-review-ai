@@ -22,21 +22,21 @@ module CodeReviewAi
       Make sure NOT TO RETURN ANYTHING OUTSIDE OF THE REQUIRED FORMAT. No introduction or conclusion is needed.
 
       Please generate the code review suggestions in following language:
-      %{language}
+      %<language>s
 
       Here are the changes in the repository:
-      %{changes}
+      %<changes>s
     PROMPT
 
     BRANCH_SUMMARY_TEMPLATE = <<~PROMPT
       You are a Ruby developer with expert-level proficiency in OOP principles and best practices.
       Your task is to provide a concise, well-structured summary of the changes made in the following branch.
 
-      Please ensure that all output is written in %{language}.
+      Please ensure that all output is written in %<language>s.
 
       Follow this format for your summary:
 
-      1. **Overview**: A high-level summary of the changes made in the branch, written in %{language}.
+      1. **Overview**: A high-level summary of the changes made in the branch, written in %<language>s.
 
       2. **File-wise Breakdown**: For each file, list the key changes in bullet points. Be specific and concise:
         - **Summary**: A brief description of the change.
@@ -46,8 +46,7 @@ module CodeReviewAi
         - **Other Notes**: Any additional relevant details or context.
 
       Changes:
-      %{changes}
+      %<changes>s
     PROMPT
-
   end
 end

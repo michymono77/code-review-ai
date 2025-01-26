@@ -100,8 +100,9 @@ module CodeReviewAi
     end
 
     def get_current_branch
-      stdout, stderr, status = Open3.capture3('git rev-parse --abbrev-ref HEAD')
+      stdout, _, status = Open3.capture3('git rev-parse --abbrev-ref HEAD')
       return stdout.strip if status.success?
+
       nil
     end
 
