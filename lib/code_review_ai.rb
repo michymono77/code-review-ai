@@ -18,8 +18,22 @@ module CodeReviewAi
     end
 
     def conduct_code_review
-      prompt = generate_prompt
-      response = get_ai_response(prompt)
+      prompt = generate_prompt(CodeReviewAi::Prompts::CODE_REVIEW_TEMPLATETEMPLATE)
+      response = @client.chat(
+        parameters: {
+          model: @ai_model,
+          messages: [
+            {
+              role: 'system',
+              content: 'You are an assistant generating code review comments based on repository changes.'
+            },
+            {
+              role: 'user',
+              content: prompt
+            }
+          ]
+        }
+      )
       code_review_comments = process_response(response)
       apply_code_review_comments(code_review_comments)
     rescue StandardError => e
@@ -27,24 +41,24 @@ module CodeReviewAi
     end
 
     def generate_branch_summary
-        prompt = format(CodeReviewAi::Prompts::BRANCH_SUMMARY_TEMPLATE, changes: fetch_branch_changes, language: @language)
-        response = @client.chat(
-          parameters: {
-            model: @ai_model,
-            messages: [
-              {
-                role: 'system',
-                content: 'You are an assistant summarizing git branch changes clearly and concisely.'
-              },
-              {
-                role: 'user',
-                content: prompt
-              }
-            ]
-          }
-        )
-        summary = process_response(response)
-        puts summary
+      prompt = generate_prompt(CodeReviewAi::Prompts::BRANCH_SUMMARY_TEMPLATE)
+      response = @client.chat(
+        parameters: {
+          model: @ai_model,
+          messages: [
+            {
+              role: 'system',
+              content: 'You are an assistant summarizing git branch changes clearly and concisely.'
+            },
+            {
+              role: 'user',
+              content: prompt
+            }
+          ]
+        }
+      )
+      summary = process_response(response)
+      puts summary
     rescue StandardError => e
       "Error generating branch summary: #{e.message}"
     end
@@ -62,26 +76,8 @@ module CodeReviewAi
       response.dig('choices', 0, 'message', 'content') || 'Error: Unable to generate code review.'
     end
 
-    def get_ai_response(prompt)
-      @client.chat(
-        parameters: {
-          model: @ai_model,
-          messages: [
-            {
-              role: 'system',
-              content: 'You are an assistant generating code review comments based on repository changes.'
-            },
-            {
-              role: 'user',
-              content: prompt
-            }
-          ]
-        }
-      )
-    end
-
-    def generate_prompt
-      format(CodeReviewAi::Prompts::CODE_REVIEW_TEMPLATETEMPLATE, changes: fetch_branch_changes, language: @language)
+    def generate_prompt(template)
+      format(template, changes: fetch_branch_changes, language: @language)
     end
 
     def fetch_branch_changes

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+require_relative 'lib/commit_review_ai/version'
+
 Gem::Specification.new do |s|
   s.name        = 'code-review-ai'
-  s.version     = '0.0.1'
+  s.version     = CodeReviewAi::VERSION
   s.summary     = 'Generate code reviews effortlessly using OpenAI.'
   s.description = 'CLI tool that leverages OpenAI to generate code reviews'
   s.authors     = ['Michiharu Ono']
