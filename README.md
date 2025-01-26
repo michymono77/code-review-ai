@@ -18,6 +18,10 @@ After installing the gem, please run the following command to install Node.js de
 ```sh
 npm install -g standard-version
 ```
+Make the `bin/code_review_ai` script executable:
+```sh
+chmod +x bin/code_review_ai
+```
 
 ## Usage
 
