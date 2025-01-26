@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1](https://github.com/michymono77/code-review-ai/compare/v1.1.0...v0.1.1) (2025-01-26)
+
+
+### Features
+
+* add command option for code review or summary in CLI ([a8b76d3](https://github.com/michymono77/code-review-ai/commit/a8b76d38d1aa2d6afe29d23ce5e83d7b3086187e))
+* enhance CLI usage instructions with command options and environment variables ([d7a614a](https://github.com/michymono77/code-review-ai/commit/d7a614a00b0a19599cae06244a35b7835b47a567))
+* implement CodeReviewAi client with methods for branch summary and code review ([e32a78e](https://github.com/michymono77/code-review-ai/commit/e32a78e5a1e4cc2c97a0ab57316d048f197cbd14))
+
+
+### Bug Fixes
+
+* correct typo in code review prompt template name ([9d08053](https://github.com/michymono77/code-review-ai/commit/9d0805329cce509d3fcfe7d806c5f7c36ee72682))
+
 ## 0.0.1 (2025-01-26)
 
 
