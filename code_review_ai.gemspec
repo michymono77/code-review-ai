@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.files       = Dir.glob('lib/**/*.rb')
   s.add_dependency 'faraday', '~> 2.1'
   s.add_dependency 'ruby-openai', '~> 7.3'
+  s.add_dependency 'optparse', '~> 1.0'
   s.required_ruby_version = '>= 3.3'
   s.license = 'MIT'
   s.metadata['rubygems_mfa_required'] = 'true'
