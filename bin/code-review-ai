@@ -18,14 +18,29 @@ OptionParser.new do |opts|
   opts.on("-l", "--language LANG", "Language for output") do |lang|
     options[:language] = lang
   end
+
+  opts.on("-c", "--command CMD", "Command (review or summary)") do |cmd|
+    options[:command] = cmd
+  end
 end.parse!
 
 begin
   api_key = options[:api_key] || ENV['OPENAI_ACCESS_TOKEN']
   model = options[:model] || ENV['OPENAI_MODEL'] || 'gpt-3.5-turbo'
   language = options[:language] || ENV['OPENAI_LANGUAGE'] || 'English'
+  command = options[:command] || 'review'
+
   reviewer = CodeReviewAi::Client.new(api_key, model, language)
-  puts reviewer.generate_branch_summary
+
+  case command
+  when 'review'
+    reviewer.conduct_code_review
+  when 'summary'
+    puts reviewer.generate_branch_summary
+  else
+    puts "Unknown command. Use 'review' or 'summary'"
+    exit 1
+  end
 rescue StandardError => e
   puts "Error: #{e.message}"
   exit 1
