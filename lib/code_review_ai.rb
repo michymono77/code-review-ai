@@ -7,16 +7,25 @@ require_relative 'code_review_ai/prompts'
 
 module CodeReviewAi
   # ================================================================================
-  # This class interacts with the OPENAI to process and generate
-  # a branch summary as well as code review.
+  # This class interacts with the OpenAI API to process and generate
+  # a branch summary as well as code review comments using AI models.
   # ================================================================================
   class Client
+    # Initialize a new CodeReviewAi client
+    #
+    # @param api_token [String] OpenAI API access token for authentication
+    # @param ai_model [String] OpenAI model to use (e.g., 'gpt-3.5-turbo', 'gpt-4')
+    # @param language [String] Output language for generated content
     def initialize(api_token, ai_model, language)
       @client = create_openai_client(api_token)
       @ai_model = ai_model
       @language = language
     end
 
+    # Conduct an AI-powered code review on the current branch
+    # Analyzes git diff and generates review comments using OpenAI
+    #
+    # @return [String] Generated code review comments
     def conduct_code_review
       prompt = generate_prompt(CodeReviewAi::Prompts::CODE_REVIEW_TEMPLATE)
       response = @client.chat(
