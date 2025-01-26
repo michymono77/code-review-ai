@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'lib/commit_review_ai/version'
+require_relative 'lib/code_review_ai/version'
 
 Gem::Specification.new do |s|
   s.name        = 'code-review-ai'
@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.files       = Dir.glob('lib/**/*.rb')
   s.add_dependency 'faraday', '~> 2.1'
   s.add_dependency 'ruby-openai', '~> 7.3'
+  s.add_dependency 'optparse', '~> 0.6'
   s.required_ruby_version = '>= 3.3'
   s.license = 'MIT'
   s.metadata['rubygems_mfa_required'] = 'true'

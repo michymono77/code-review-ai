@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+
+require 'code_review_ai'
+require 'optparse'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: code-review-ai [options]"
+
+  opts.on("-k", "--api-key KEY", "OpenAI API key") do |key|
+    options[:api_key] = key
+  end
+
+  opts.on("-m", "--model MODEL", "AI model to use") do |model|
+    options[:model] = model
+  end
+
+  opts.on("-l", "--language LANG", "Language for output") do |lang|
+    options[:language] = lang
+  end
+end.parse!
+
+begin
+  api_key = options[:api_key] || ENV['OPENAI_ACCESS_TOKEN']
+  model = options[:model] || ENV['OPENAI_MODEL'] || 'gpt-3.5-turbo'
+  language = options[:language] || ENV['OPENAI_LANGUAGE'] || 'English'
+  reviewer = CodeReviewAi::Client.new(api_key, model, language)
+  puts reviewer.generate_branch_summary
+rescue StandardError => e
+  puts "Error: #{e.message}"
+  exit 1
+end
