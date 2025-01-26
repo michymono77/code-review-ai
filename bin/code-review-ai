@@ -21,10 +21,9 @@ OptionParser.new do |opts|
 end.parse!
 
 begin
-  api_key = options[:api_key] || ENV['OPENAI_API_KEY']
-  model = options[:model] || 'gpt-3.5-turbo'
-  language = options[:language] || 'English'
-
+  api_key = options[:api_key] || ENV['OPENAI_ACCESS_TOKEN']
+  model = options[:model] || ENV['OPENAI_MODEL'] || 'gpt-3.5-turbo'
+  language = options[:language] || ENV['OPENAI_LANGUAGE'] || 'English'
   reviewer = CodeReviewAi::Client.new(api_key, model, language)
   puts reviewer.generate_branch_summary
 rescue StandardError => e
