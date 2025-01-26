@@ -18,7 +18,7 @@ module CodeReviewAi
     end
 
     def conduct_code_review
-      prompt = generate_prompt(CodeReviewAi::Prompts::CODE_REVIEW_TEMPLATETEMPLATE)
+      prompt = generate_prompt(CodeReviewAi::Prompts::CODE_REVIEW_TEMPLATE)
       response = @client.chat(
         parameters: {
           model: @ai_model,
