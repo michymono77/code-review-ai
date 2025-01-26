@@ -7,8 +7,8 @@ require_relative 'code_review_ai/prompts'
 
 module CodeReviewAi
   # ================================================================================
-  # This class interacts with the Commit Message AI service to process and generate
-  # meaningful commit messages based on changes in the repository.
+  # This class interacts with the OPENAI to process and generate
+  # a branch summary as well as code review.
   # ================================================================================
   class Client
     def initialize(api_token, ai_model, language)
