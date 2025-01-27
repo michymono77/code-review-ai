@@ -47,7 +47,7 @@ module CodeReviewAi
 
     2. **File-wise Breakdown**
       For each file, list key changes with the following details:
-      - **Summary**: A brief description of what was changed.
+      - **Summary**: A brief description of what was changed. Make sure too include which lines were added, removed, or modified.
       - **Impact**: How the change affects functionality, performance, or the codebase.
       - **Potential Issues**: Any concerns or risks introduced by the change.
       - **Suggestions for Improvement**: Recommendations for refining the code or changes.
