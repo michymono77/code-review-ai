@@ -28,25 +28,38 @@ module CodeReviewAi
       %<changes>s
     PROMPT
 
-    BRANCH_SUMMARY_TEMPLATE = <<~PROMPT
-      You are a Ruby developer with expert-level proficiency in OOP principles and best practices.
-      Your task is to provide a concise, well-structured summary of the changes made in the following branch.
+  BRANCH_SUMMARY_TEMPLATE = <<~PROMPT
+    Act as a seasoned Ruby developer with expert-level knowledge of OOP principles, best practices, and clean code standards.
+    Your task is to provide a concise, well-structured summary of the changes made in the following branch.
 
-      Please ensure that all output is written in %<language>s.
+    **Guidelines**:
+    - Ensure the output is written entirely in **%<language>s**.
+    - Provide clear, actionable insights in the summary.
+    - Your recommendations should reflect OOP principles, performance, readability, and maintainability.
+    - If possible, provide detailed suggestions for improvement.
+    - Use the exact format specified below for consistency.
+    - If you spot any codes that can be abstracted or refactored, please mention them.
 
-      Follow this format for your summary:
+    **Use the following format for the summary:**
 
-      1. **Overview**: A high-level summary of the changes made in the branch, written in %<language>s.
+    1. **Overview**
+      A high-level summary of the changes made in the branch, describing their purpose and context in **%<language>s**.
 
-      2. **File-wise Breakdown**: For each file, list the key changes in bullet points. Be specific and concise:
-        - **Summary**: A brief description of the change.
-        - **Impact**: How the change affects the functionality or performance.
-        - **Potential Issues**: Any concerns or potential pitfalls with the change.
-        - **Suggestions for Improvement**: Recommendations for enhancing the change or code.
-        - **Other Notes**: Any additional relevant details or context.
+    2. **File-wise Breakdown**
+      For each file, list key changes with the following details:
+      - **Summary**: A brief description of what was changed.
+      - **Impact**: How the change affects functionality, performance, or the codebase.
+      - **Potential Issues**: Any concerns or risks introduced by the change.
+      - **Suggestions for Improvement**: Recommendations for refining the code or changes.
+      - **Other Notes**: Any additional context or points to consider.
 
-      Changes:
-      %<changes>s
-    PROMPT
+    3. **Overall Impression**
+      Your general recommendations on the inter file changes and the overall quality of the codebase.
+      If refactoring or restructuring is possible, please mention it here in details.
+
+    **Changes to Analyze:**
+    %<changes>s
+  PROMPT
+
   end
 end
