@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/michymono77/code-review-ai/compare/v0.1.1...v0.1.2) (2025-01-27)
+
+
+### Bug Fixes
+
+* update executable name in gemspec to use hyphens ([6849d59](https://github.com/michymono77/code-review-ai/commit/6849d59034b65b65d4c857be35d53cf99a1d26a0))
+
 ### [0.1.1](https://github.com/michymono77/code-review-ai/compare/v1.1.0...v0.1.1) (2025-01-26)
 
 
