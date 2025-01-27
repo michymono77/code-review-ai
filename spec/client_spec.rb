@@ -37,4 +37,16 @@ RSpec.describe CodeReviewAi::Client, type: :class do
       end
     end
   end
+
+  describe '#conduct_code_review' do
+    context 'when API fails' do
+      before do
+        allow_any_instance_of(OpenAI::Client).to receive(:chat).and_raise(StandardError.new('API error'))
+      end
+
+      it 'returns error message' do
+        expect(code_review_ai.conduct_code_review).to eq('Error communicating with OpenAI API: API error')
+      end
+    end
+  end
 end
